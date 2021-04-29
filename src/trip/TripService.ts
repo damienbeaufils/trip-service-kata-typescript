@@ -35,7 +35,7 @@ export default class TripService {
         }
     }
 
-    getLoggedUser(): any {
+    public getLoggedUser(): any {
         return UserSession.getLoggedUser();
     }
 }
