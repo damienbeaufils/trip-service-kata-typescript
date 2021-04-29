@@ -14,7 +14,7 @@ export default class TripService {
      */
     public getTripsByUser(u: User): Trip[] {
         let trips = [];
-        const logged: any = UserSession.getLoggedUser();
+        const logged: any = this.getLoggedUser();
         let f: boolean = false;
 
         if (logged != null) {
@@ -33,5 +33,9 @@ export default class TripService {
         } else {
             throw new UserNotLoggedInException();
         }
+    }
+    
+    protected getLoggedUser(): any {
+        return UserSession.getLoggedUser();
     }
 }
