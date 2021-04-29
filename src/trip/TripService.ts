@@ -34,8 +34,8 @@ export default class TripService {
             throw new UserNotLoggedInException();
         }
     }
-    
-    protected getLoggedUser(): any {
+
+    getLoggedUser(): any {
         return UserSession.getLoggedUser();
     }
 }
