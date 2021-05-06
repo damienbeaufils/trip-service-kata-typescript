@@ -209,7 +209,7 @@ describe("BankAccount", () => {
   });
 
   describe("statements()", () => {
-    it("should ", () => {
+    it("should return a single statement that corresponds to the only deposit", () => {
       // given
       bankAccount.deposit(10);
 
@@ -220,6 +220,22 @@ describe("BankAccount", () => {
       expect(result).toEqual(
         "date;credit;debit;balance\n" +
         "2021-05-06;10;0;10",
+      );
+    });
+
+    it("should return two statements that corresponds to a deposit and a withdrawal", () => {
+      // given
+      bankAccount.deposit(10);
+      bankAccount.withdraw(5);
+
+      // when
+      const result = bankAccount.statements();
+
+      // then
+      expect(result).toEqual(
+        "date;credit;debit;balance\n" +
+        "2021-05-06;10;0;10\n" +
+        "2021-05-06;0;5;5"
       );
     });
   });
