@@ -16,6 +16,11 @@ export class BankAccount {
     this.balance -= amount;
   }
 
+  public transfer(recipient: BankAccount, amount: number): void {
+    this.withdraw(amount);
+    recipient.deposit(amount);
+  }
+
   public getBalance(): number {
     return this.balance;
   }
