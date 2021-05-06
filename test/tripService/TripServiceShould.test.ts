@@ -1,7 +1,7 @@
 import "jest";
-import UserNotLoggedInException from "../src/exception/UserNotLoggedInException";
-import TripService from "../src/trip/TripService";
-import User from "../src/user/User";
+import UserNotLoggedInException from "../../src/tripService/exception/UserNotLoggedInException";
+import TripService from "../../src/tripService/trip/TripService";
+import User from "../../src/tripService/user/User";
 
 describe("TripServiceShould", () => {
     let tripService;
