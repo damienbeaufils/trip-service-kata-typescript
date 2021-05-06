@@ -16,8 +16,8 @@ export class BankAccount {
     BankAccount.assertAmountIsValid(amount);
     this.transactions.push(new Transaction(
       new Date(),
-      TransactionType.DEPOSIT,
       amount,
+      TransactionType.DEPOSIT,
     ));
   }
 
@@ -28,8 +28,8 @@ export class BankAccount {
     }
     this.transactions.push(new Transaction(
       new Date(),
-      TransactionType.WITHDRAW,
       amount,
+      TransactionType.WITHDRAW,
     ));
   }
 
@@ -47,18 +47,21 @@ export class BankAccount {
   }
 
   public statements(): string {
-    const header = "date;credit;debit;balance";
     let balance = 0;
-    const statements = this.transactions.map((transaction) => {
+    let statements = []
+
+    for(let transaction of this.transactions) {
       if (transaction.type === TransactionType.DEPOSIT) {
         balance += transaction.amount;
       } else {
         balance -= transaction.amount;
       }
-      return transaction.toString(balance);
-    });
-
-    return header + '\n' + statements.join('\n');
+      statements.push(transaction.toString(balance))
+    }
+    return (
+      "date;credit;debit;balance" + "\n" + 
+      statements.join("\n")
+    );
   }
 }
 
@@ -73,7 +76,7 @@ class Transaction {
   }
 
   public toString(balance: number): string {
-    let statement = `${this._date.toISOString().split('T')[0]};`;
+    let statement = `${this._date.toISOString().split("T")[0]};`;
     statement += this._type === TransactionType.DEPOSIT ? `${this._amount};0;` : `0;${this._amount};`;
     statement += `${balance}`;
     return statement;

@@ -1,9 +1,12 @@
 import {BankAccount, InsufficientFundsError, InvalidAmountError} from "../../src/bankAccount/bankAccount";
 
 describe("BankAccount", () => {
+  const fixedDate: Date = new Date('2017-06-13T04:41:20');
   let bankAccount;
   beforeEach(() => {
     bankAccount = new BankAccount();
+     // @ts-ignore
+    jest.spyOn(global, 'Date').mockImplementation(() => fixedDate);
   });
 
   describe("deposit()", () => {
@@ -219,7 +222,7 @@ describe("BankAccount", () => {
       // then
       expect(result).toEqual(
         "date;credit;debit;balance\n" +
-        "2021-05-06;10;0;10",
+        "2017-06-13;10;0;10",
       );
     });
 
@@ -234,8 +237,8 @@ describe("BankAccount", () => {
       // then
       expect(result).toEqual(
         "date;credit;debit;balance\n" +
-        "2021-05-06;10;0;10\n" +
-        "2021-05-06;0;5;5"
+        "2017-06-13;10;0;10\n" +
+        "2017-06-13;0;5;5"
       );
     });
   });
