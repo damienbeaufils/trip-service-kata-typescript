@@ -109,5 +109,42 @@ describe("BankAccount", () => {
       expect(result).toThrow(new InvalidAmountError("Invalid amount"));
       expect(bankAccount.getBalance()).toEqual(10);
     });
+
+    it("should not change balance and throw an error given amount < 0", () => {
+      // given
+      bankAccount.deposit(10);
+
+      // when
+      const result = () => bankAccount.withdraw(-1);
+
+      // then
+      expect(result).toThrow(new InvalidAmountError("Invalid amount"));
+      expect(bankAccount.getBalance()).toEqual(10);
+    });
+
+    it("should not change balance and throw an error given a NaN amount", () => {
+      // given
+      bankAccount.deposit(10);
+
+      // when
+      const result = () => bankAccount.withdraw(NaN);
+
+      // then
+      expect(result).toThrow(new InvalidAmountError("Invalid amount"));
+      expect(bankAccount.getBalance()).toEqual(10);
+    });
   });
+
+  describe('transfer', () => {
+    let fromBankAccount;
+    let toBankAccount;
+    beforeEach(() => {
+      fromBankAccount = new BankAccount();
+      toBankAccount = new BankAccount();
+    });
+
+    it('', () => {
+      throw Error('do me')
+    })
+  })
 });

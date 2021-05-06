@@ -1,15 +1,15 @@
+
 export class BankAccount {
 
   private balance: number = 0;
 
   public deposit(amount: number): void {
-    if (isNaN(amount) || amount <= 0) {
-      throw new InvalidAmountError("Invalid amount");
-    }
+    BankAccount.assertAmountIsValid(amount);
     this.balance += amount;
   }
 
   public withdraw(amount: number): void {
+    BankAccount.assertAmountIsValid(amount);
     if (amount > this.balance) {
       throw new InsufficientFundsError("Insufficient funds");
     }
@@ -18,6 +18,16 @@ export class BankAccount {
 
   public getBalance(): number {
     return this.balance;
+  }
+  
+  private static isInvalidAmount(amount: number): boolean {
+    return isNaN(amount) || amount <= 0;
+  }
+  
+  private static assertAmountIsValid(amount: number): void {
+    if (BankAccount.isInvalidAmount(amount)) {
+      throw new InvalidAmountError("Invalid amount");
+    }
   }
 }
 
