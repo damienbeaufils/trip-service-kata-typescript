@@ -1,4 +1,4 @@
-import {BankAccount} from "../../src/bankAccount/bankAccount";
+import {BankAccount, InvalidAmountError} from "../../src/bankAccount/bankAccount";
 
 describe("BankAccount", () => {
   let bankAccount;
@@ -26,14 +26,28 @@ describe("BankAccount", () => {
       expect(bankAccount.getBalance()).toEqual(35);
     });
 
-    it('should ', () => {
-      // given
-
+    it('should throw an error given amount = 0', () => {
       // when
       const result = () => bankAccount.deposit(0);
 
       // then
-      expect(result).toThrow(new InvalidDepositError());
+      expect(result).toThrow(new InvalidAmountError('Invalid amount'));
+    });
+
+    it('should throw an error given amount < 0', () => {
+      // when
+      const result = () => bankAccount.deposit(-1);
+
+      // then
+      expect(result).toThrow(new InvalidAmountError('Invalid amount'));
+    });
+
+    it('should throw an error given a NaN amount', () => {
+      // when
+      const result = () => bankAccount.deposit(NaN);
+
+      // then
+      expect(result).toThrow(new InvalidAmountError('Invalid amount'));
     });
   });
 });

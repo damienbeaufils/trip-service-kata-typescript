@@ -1,1 +1,1 @@
-export class InvalidDepositError extends Error{}
+export class InvalidDepositError extends Error {}
