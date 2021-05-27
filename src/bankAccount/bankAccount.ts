@@ -46,18 +46,19 @@ export class BankAccount {
     ), 0);
   }
 
-  public statements(type?: TransactionType): string {
+  public statements(filter?: { type?: TransactionType }): string {
     let balance = 0;
     const statements = [];
-    const filteredTransactions = type ? this.transactions.filter((t) => t.type === type) : this.transactions;
-
-    for (const transaction of filteredTransactions) {
+    
+    for (const transaction of this.transactions) {
       if (transaction.type === TransactionType.DEPOSIT) {
         balance += transaction.amount;
       } else {
         balance -= transaction.amount;
       }
-      statements.push(transaction.toString(balance));
+      if (!type || transaction.type === type) {
+        statements.push(transaction.toString(balance));
+      }
     }
     return (
       "date;credit;debit;balance" + "\n" +

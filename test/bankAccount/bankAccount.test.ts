@@ -283,5 +283,35 @@ describe("BankAccount", () => {
         "2017-06-13;10;0;10",
       );
     });
+
+    it("should return only deposit statements when filtering on withdraw type", () => {
+      // given
+      bankAccount.deposit(10);
+      bankAccount.withdraw(5);
+
+      // when
+      const result = bankAccount.statements(TransactionType.WITHDRAW);
+
+      // then
+      expect(result).toEqual(
+        "date;credit;debit;balance\n" +
+        "2017-06-13;0;5;5",
+      );
+    });
+
+    // it("should return only statements whose amount is within passed range", () => {
+    //   // given
+    //   bankAccount.deposit(10);
+    //   bankAccount.withdraw(5);
+
+    //   // when
+    //   const result = bankAccount.statements(TransactionType.WITHDRAW);
+
+    //   // then
+    //   expect(result).toEqual(
+    //     "date;credit;debit;balance\n" +
+    //     "2017-06-13;0;5;5",
+    //   );
+    // });
   });
 });
