@@ -49,24 +49,33 @@ export class BankAccount {
   public statements(filter?: StatementFilter): string {
     let balance = 0;
     const statements = [];
-    
+
     for (const transaction of this.transactions) {
       if (transaction.type === TransactionType.DEPOSIT) {
         balance += transaction.amount;
       } else {
         balance -= transaction.amount;
       }
+      statements.push({ statement: transaction.toString(balance), transaction });
+    }
 
+    const statementFilter = (filter, transaction) => {
+      if (!filter) {
+        return true;
+      }
       const hasSameType = !filter?.type || transaction.type === filter?.type;
       const amountIsInRange = !filter?.amount || transaction.amount >= filter.amount[0] && transaction.amount <= filter.amount[1];
       const dateIsInRange = !filter?.date || transaction.date >= filter.date[0] && transaction.date <= filter.date[1];
-      if (!filter || (hasSameType && amountIsInRange && dateIsInRange)) {
-        statements.push(transaction.toString(balance));
-      }
-    }
+      return (hasSameType && amountIsInRange && dateIsInRange);
+    };
+
+    const filteredStatements = statements
+      .filter(({ transaction }) => statementFilter(filter, transaction))
+      .map(({ statement }) => statement);
+    
     return (
       "date;credit;debit;balance" + "\n" +
-      statements.join("\n")
+      filteredStatements.join("\n")
     );
   }
 }
