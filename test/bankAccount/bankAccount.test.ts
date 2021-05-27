@@ -1,12 +1,17 @@
-import {BankAccount, InsufficientFundsError, InvalidAmountError} from "../../src/bankAccount/bankAccount";
+import {
+  BankAccount,
+  InsufficientFundsError,
+  InvalidAmountError,
+  TransactionType,
+} from "../../src/bankAccount/bankAccount";
 
 describe("BankAccount", () => {
-  const fixedDate: Date = new Date('2017-06-13T04:41:20');
+  const fixedDate: Date = new Date("2017-06-13T04:41:20");
   let bankAccount;
   beforeEach(() => {
     bankAccount = new BankAccount();
-     // @ts-ignore
-    jest.spyOn(global, 'Date').mockImplementation(() => fixedDate);
+    // @ts-ignore
+    jest.spyOn(global, "Date").mockImplementation(() => fixedDate);
   });
 
   describe("deposit()", () => {
@@ -238,7 +243,44 @@ describe("BankAccount", () => {
       expect(result).toEqual(
         "date;credit;debit;balance\n" +
         "2017-06-13;10;0;10\n" +
-        "2017-06-13;0;5;5"
+        "2017-06-13;0;5;5",
+      );
+    });
+
+    it("should return two statements that corresponds to a deposit and a withdrawal", () => {
+      // given
+      const recipient = new BankAccount();
+      bankAccount.deposit(10);
+      bankAccount.transfer(recipient, 5);
+
+      // when
+      const senderStatements = bankAccount.statements();
+      const recipientStatements = recipient.statements();
+
+      // then
+      expect(senderStatements).toEqual(
+        "date;credit;debit;balance\n" +
+        "2017-06-13;10;0;10\n" +
+        "2017-06-13;0;5;5",
+      );
+      expect(recipientStatements).toEqual(
+        "date;credit;debit;balance\n" +
+        "2017-06-13;5;0;5",
+      );
+    });
+
+    it("should return only deposit statements when filtering on deposit type", () => {
+      // given
+      bankAccount.deposit(10);
+      bankAccount.withdraw(5);
+
+      // when
+      const result = bankAccount.statements(TransactionType.DEPOSIT);
+
+      // then
+      expect(result).toEqual(
+        "date;credit;debit;balance\n" +
+        "2017-06-13;10;0;10",
       );
     });
   });

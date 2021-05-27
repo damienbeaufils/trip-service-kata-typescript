@@ -46,20 +46,21 @@ export class BankAccount {
     ), 0);
   }
 
-  public statements(): string {
+  public statements(type?: TransactionType): string {
     let balance = 0;
-    let statements = []
+    const statements = [];
+    const filteredTransactions = type ? this.transactions.filter((t) => t.type === type) : this.transactions;
 
-    for(let transaction of this.transactions) {
+    for (const transaction of filteredTransactions) {
       if (transaction.type === TransactionType.DEPOSIT) {
         balance += transaction.amount;
       } else {
         balance -= transaction.amount;
       }
-      statements.push(transaction.toString(balance))
+      statements.push(transaction.toString(balance));
     }
     return (
-      "date;credit;debit;balance" + "\n" + 
+      "date;credit;debit;balance" + "\n" +
       statements.join("\n")
     );
   }
@@ -91,6 +92,6 @@ class Transaction {
   }
 }
 
-enum TransactionType {
-  DEPOSIT, WITHDRAW,
+export enum TransactionType {
+  DEPOSIT= "DEPOSIT", WITHDRAW= "WITHDRAW",
 }
