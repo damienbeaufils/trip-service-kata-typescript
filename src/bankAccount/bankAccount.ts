@@ -57,9 +57,10 @@ export class BankAccount {
         balance -= transaction.amount;
       }
 
-      const hasSameType = transaction.type === filter?.type;
-      const isInRange = !filter?.amount || transaction.amount >= filter.amount[0] && transaction.amount <= filter.amount[1];
-      if (!filter || (hasSameType && isInRange)) {
+      const hasSameType = !filter?.type || transaction.type === filter?.type;
+      const amountIsInRange = !filter?.amount || transaction.amount >= filter.amount[0] && transaction.amount <= filter.amount[1];
+      const dateIsInRange = !filter?.date || transaction.date >= filter.date[0] && transaction.date <= filter.date[1];
+      if (!filter || (hasSameType && amountIsInRange && dateIsInRange)) {
         statements.push(transaction.toString(balance));
       }
     }
@@ -94,6 +95,10 @@ class Transaction {
   get type(): TransactionType {
     return this._type;
   }
+
+  get date(): Date {
+    return this._date;
+  }
 }
 
 export enum TransactionType {
@@ -103,4 +108,5 @@ export enum TransactionType {
 export interface StatementFilter {
   type?: TransactionType;
   amount?: [number, number];
+  date?: [Date, Date];
 }

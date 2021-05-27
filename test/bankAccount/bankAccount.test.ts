@@ -5,8 +5,6 @@ import {
   TransactionType,
 } from "../../src/bankAccount/bankAccount";
 
-
-
 describe("BankAccount", () => {
   const fixedDate: Date = new Date("2017-06-13T04:41:20");
   const secondFixedDate: Date = new Date("2017-06-14T04:41:20");
@@ -341,23 +339,27 @@ describe("BankAccount", () => {
       // @ts-ignore
       jest.spyOn(global, "Date")
         // @ts-ignore
-        .mockImplementation(() => fixedDate)
+        .mockImplementationOnce(() => fixedDate)
         // @ts-ignore
-        .mockImplementation(() => secondFixedDate)
+        .mockImplementationOnce(() => secondFixedDate)
         // @ts-ignore
-        .mockImplementation(() => thirdFixedDate)
-      
+        .mockImplementationOnce(() => thirdFixedDate)
+        // @ts-ignore
+        .mockImplementationOnce(() => fixedDate);
+
       bankAccount.deposit(20);
       bankAccount.withdraw(5);
       bankAccount.deposit(5);
+      bankAccount.withdraw(15);
 
       // when
-      const result = bankAccount.statements({type: TransactionType.DEPOSIT, amount: [4, 6]});
+      const result = bankAccount.statements({date: [secondFixedDate, thirdFixedDate]});
 
       // then
       expect(result).toEqual(
         "date;credit;debit;balance\n" +
-        "2017-06-13;5;0;20",
+        "2017-06-14;0;5;15\n" +
+        "2017-06-16;5;0;20",
       );
     });
   });
