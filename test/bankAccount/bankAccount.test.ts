@@ -5,8 +5,13 @@ import {
   TransactionType,
 } from "../../src/bankAccount/bankAccount";
 
+
+
 describe("BankAccount", () => {
   const fixedDate: Date = new Date("2017-06-13T04:41:20");
+  const secondFixedDate: Date = new Date("2017-06-14T04:41:20");
+  const thirdFixedDate: Date = new Date("2017-06-16T04:41:20");
+
   let bankAccount;
   beforeEach(() => {
     bankAccount = new BankAccount();
@@ -319,7 +324,7 @@ describe("BankAccount", () => {
       // given
       bankAccount.deposit(20);
       bankAccount.withdraw(5);
-      bankAccount.withdraw(15);
+      bankAccount.deposit(5);
 
       // when
       const result = bankAccount.statements({type: TransactionType.DEPOSIT, amount: [4, 6]});
@@ -327,7 +332,32 @@ describe("BankAccount", () => {
       // then
       expect(result).toEqual(
         "date;credit;debit;balance\n" +
-        "2017-06-13;0;5;15",
+        "2017-06-13;5;0;20",
+      );
+    });
+
+    it("should return only statements for a certain date range", () => {
+      // given
+      // @ts-ignore
+      jest.spyOn(global, "Date")
+        // @ts-ignore
+        .mockImplementation(() => fixedDate)
+        // @ts-ignore
+        .mockImplementation(() => secondFixedDate)
+        // @ts-ignore
+        .mockImplementation(() => thirdFixedDate)
+      
+      bankAccount.deposit(20);
+      bankAccount.withdraw(5);
+      bankAccount.deposit(5);
+
+      // when
+      const result = bankAccount.statements({type: TransactionType.DEPOSIT, amount: [4, 6]});
+
+      // then
+      expect(result).toEqual(
+        "date;credit;debit;balance\n" +
+        "2017-06-13;5;0;20",
       );
     });
   });
