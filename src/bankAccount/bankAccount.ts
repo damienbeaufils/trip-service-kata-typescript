@@ -46,7 +46,7 @@ export class BankAccount {
     ), 0);
   }
 
-  public statements(filter?: { type?: TransactionType }): string {
+  public statements(filter?: StatementFilter): string {
     let balance = 0;
     const statements = [];
     
@@ -56,7 +56,10 @@ export class BankAccount {
       } else {
         balance -= transaction.amount;
       }
-      if (!type || transaction.type === type) {
+
+      const hasSameType = transaction.type === filter?.type;
+      const isInRange = !filter?.amount || transaction.amount >= filter.amount[0] && transaction.amount <= filter.amount[1];
+      if (!filter || (hasSameType && isInRange)) {
         statements.push(transaction.toString(balance));
       }
     }
@@ -95,4 +98,9 @@ class Transaction {
 
 export enum TransactionType {
   DEPOSIT= "DEPOSIT", WITHDRAW= "WITHDRAW",
+}
+
+export interface StatementFilter {
+  type?: TransactionType;
+  amount?: [number, number];
 }

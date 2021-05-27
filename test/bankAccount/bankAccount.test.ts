@@ -275,7 +275,7 @@ describe("BankAccount", () => {
       bankAccount.withdraw(5);
 
       // when
-      const result = bankAccount.statements(TransactionType.DEPOSIT);
+      const result = bankAccount.statements({type: TransactionType.DEPOSIT});
 
       // then
       expect(result).toEqual(
@@ -290,7 +290,7 @@ describe("BankAccount", () => {
       bankAccount.withdraw(5);
 
       // when
-      const result = bankAccount.statements(TransactionType.WITHDRAW);
+      const result = bankAccount.statements({type: TransactionType.WITHDRAW});
 
       // then
       expect(result).toEqual(
@@ -299,19 +299,36 @@ describe("BankAccount", () => {
       );
     });
 
-    // it("should return only statements whose amount is within passed range", () => {
-    //   // given
-    //   bankAccount.deposit(10);
-    //   bankAccount.withdraw(5);
+    it("should return only withdraw statements whose amount is within passed range", () => {
+      // given
+      bankAccount.deposit(20);
+      bankAccount.withdraw(5);
+      bankAccount.withdraw(15);
 
-    //   // when
-    //   const result = bankAccount.statements(TransactionType.WITHDRAW);
+      // when
+      const result = bankAccount.statements({type: TransactionType.WITHDRAW, amount: [4, 6]});
 
-    //   // then
-    //   expect(result).toEqual(
-    //     "date;credit;debit;balance\n" +
-    //     "2017-06-13;0;5;5",
-    //   );
-    // });
+      // then
+      expect(result).toEqual(
+        "date;credit;debit;balance\n" +
+        "2017-06-13;0;5;15",
+      );
+    });
+
+    it("should return only deposit statements whose amount is within passed range", () => {
+      // given
+      bankAccount.deposit(20);
+      bankAccount.withdraw(5);
+      bankAccount.withdraw(15);
+
+      // when
+      const result = bankAccount.statements({type: TransactionType.DEPOSIT, amount: [4, 6]});
+
+      // then
+      expect(result).toEqual(
+        "date;credit;debit;balance\n" +
+        "2017-06-13;0;5;15",
+      );
+    });
   });
 });
