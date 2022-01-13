@@ -2,9 +2,12 @@ import UserNotLoggedInException from "../exception/UserNotLoggedInException";
 import User from "../user/User";
 import UserSession from "../user/UserSession";
 import Trip from "./Trip";
-import TripDAO from "./TripDAO";
+import TripRepository from "./TripRepository";
 
 export default class TripService {
+
+    constructor(private readonly userSession: UserSession, private readonly tripRepository: TripRepository) {
+    }
 
     /**
      * find trips of given user
@@ -14,7 +17,7 @@ export default class TripService {
      */
     public getTripsByUser(u: User): Trip[] {
         let trips = [];
-        const logged: any = this.getLoggedUser();
+        const logged: any = this.userSession.getLoggedUser();
         let f: boolean = false;
 
         if (logged != null) {
@@ -26,16 +29,12 @@ export default class TripService {
             }
 
             if (f) {
-                trips = TripDAO.findTripsByUser(u);
+                trips = this.tripRepository.findTripsByUser(u);
             }
 
             return trips;
         } else {
             throw new UserNotLoggedInException();
         }
-    }
-
-    public getLoggedUser(): any {
-        return UserSession.getLoggedUser();
     }
 }

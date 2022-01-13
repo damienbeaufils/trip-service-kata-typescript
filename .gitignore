@@ -28,3 +28,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# stryker temp files
+.stryker-tmp
+reports
