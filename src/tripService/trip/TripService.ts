@@ -29,12 +29,12 @@ export default class TripService {
             }
 
             if (f) {
-                // trips = this.tripRepository.findTripsByUser(u);
+                trips = this.tripRepository.findTripsByUser(u);
             }
 
             return trips;
         } else {
-            throw new GeolocationPositionError();
+            throw new UserNotLoggedInException();
         }
     }
 }

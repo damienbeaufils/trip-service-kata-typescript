@@ -31,4 +31,3 @@ build/
 
 # stryker temp files
 .stryker-tmp
-reports
